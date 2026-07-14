@@ -1,69 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Course Feedback</title>
-<style>
-body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0}
-.container{max-width:700px;margin:40px auto;background:#fff;padding:30px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.1)}
-h1{color:#1f4e79}
-.question{margin:25px 0}
-label{display:block;margin:8px 0;cursor:pointer}
-button{background:#1f4e79;color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:16px;cursor:pointer}
-#result{display:none;margin-top:25px;padding:20px;background:#eef8ee;border-left:5px solid #2e7d32}
-textarea{width:100%;min-height:100px;padding:10px;font-family:Arial;font-size:15px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Feedback</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2933;
+    }
+
+    .container {
+      width: min(700px, 92%);
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.10);
+    }
+
+    h1 {
+      color: #1f4e79;
+      margin-top: 0;
+    }
+
+    .question {
+      margin: 26px 0;
+    }
+
+    .question-title {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin: 9px 0;
+      cursor: pointer;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 10px;
+      font: inherit;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+
+    button {
+      background: #1f4e79;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 22px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    #message {
+      margin-top: 18px;
+      font-weight: 700;
+    }
+
+    .success {
+      color: #237a57;
+    }
+
+    .error {
+      color: #b42318;
+    }
+  </style>
 </head>
+
 <body>
-<div class="container">
-<h1>Course Feedback</h1>
-<p>Thank you for taking part in our course. We'd love to hear your feedback.</p>
+  <main class="container">
+    <h1>Course Feedback</h1>
+    <p>Thank you for taking part in our course. We would love to hear your feedback.</p>
 
-<form id="survey">
+    <form id="surveyForm">
+      <div class="question">
+        <span class="question-title">1. Overall, how would you rate this course?</span>
+        <label><input type="radio" name="rating" value="Excellent" required /> Excellent</label>
+        <label><input type="radio" name="rating" value="Good" /> Good</label>
+        <label><input type="radio" name="rating" value="Average" /> Average</label>
+        <label><input type="radio" name="rating" value="Fair" /> Fair</label>
+        <label><input type="radio" name="rating" value="Poor" /> Poor</label>
+      </div>
 
-<div class="question">
-<strong>1. Overall, how would you rate this course?</strong>
-<label><input type="radio" name="q1" required> ⭐⭐⭐⭐⭐ Excellent</label>
-<label><input type="radio" name="q1"> ⭐⭐⭐⭐ Good</label>
-<label><input type="radio" name="q1"> ⭐⭐⭐ Average</label>
-<label><input type="radio" name="q1"> ⭐⭐ Fair</label>
-<label><input type="radio" name="q1"> ⭐ Poor</label>
-</div>
+      <div class="question">
+        <span class="question-title">2. Would you recommend this course to a colleague?</span>
+        <label><input type="radio" name="recommend" value="Yes" required /> Yes</label>
+        <label><input type="radio" name="recommend" value="Maybe" /> Maybe</label>
+        <label><input type="radio" name="recommend" value="No" /> No</label>
+      </div>
 
-<div class="question">
-<strong>2. Would you recommend this course to a colleague?</strong>
-<label><input type="radio" name="q2" required> Yes</label>
-<label><input type="radio" name="q2"> Maybe</label>
-<label><input type="radio" name="q2"> No</label>
-</div>
+      <div class="question">
+        <label class="question-title" for="valuable">3. What was the most valuable part of the course?</label>
+        <textarea id="valuable" name="valuable"></textarea>
+      </div>
 
-<div class="question">
-<strong>3. What was the most valuable part of the course?</strong>
-<textarea></textarea>
-</div>
+      <div class="question">
+        <label class="question-title" for="improvements">4. Do you have any suggestions for improvement?</label>
+        <textarea id="improvements" name="improvements"></textarea>
+      </div>
 
-<div class="question">
-<strong>4. Do you have any suggestions for improvement?</strong>
-<textarea></textarea>
-</div>
+      <button id="submitButton" type="submit">Submit feedback</button>
+      <div id="message" role="status" aria-live="polite"></div>
+    </form>
+  </main>
 
-<button type="submit">Submit Feedback</button>
-</form>
+  <script>
+    /*
+      Replace the value below with your deployed Google Apps Script Web App URL.
+      It will look similar to:
+      https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXXXXXX/exec
+    */
+    const SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
 
-<div id="result">
-<h2>Thank you!</h2>
-<p>Your feedback has been recorded. We appreciate you taking the time to help us improve.</p>
-</div>
-</div>
+    const form = document.getElementById("surveyForm");
+    const submitButton = document.getElementById("submitButton");
+    const message = document.getElementById("message");
 
-<script>
-document.getElementById("survey").addEventListener("submit",function(e){
-e.preventDefault();
-this.style.display="none";
-document.getElementById("result").style.display="block";
-});
-</script>
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
 
+      if (SCRIPT_URL.includes("PASTE_YOUR")) {
+        message.className = "error";
+        message.textContent = "The survey has not yet been connected to the response spreadsheet.";
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Submitting...";
+      message.textContent = "";
+      message.className = "";
+
+      const formData = new FormData(form);
+
+      const data = {
+        rating: formData.get("rating"),
+        recommend: formData.get("recommend"),
+        valuable: formData.get("valuable") || "",
+        improvements: formData.get("improvements") || ""
+      };
+
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(data)
+        });
+
+        form.reset();
+        message.className = "success";
+        message.textContent = "Thank you. Your feedback has been submitted.";
+      } catch (error) {
+        message.className = "error";
+        message.textContent = "Sorry, your response could not be submitted. Please try again.";
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Submit feedback";
+      }
+    });
+  </script>
 </body>
 </html>
